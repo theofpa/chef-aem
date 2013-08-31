@@ -1,13 +1,11 @@
 # chef-aem cookbook
 
+A cookbook to install Adobe Experience Manager 5.6.
+
 # Requirements
 
-# Usage
-
-# Attributes
-
-# Recipes
+A valid Adobe ID for authentication needs to be edited in the recipe.
 
 # Author
 
-Author:: YOUR_NAME (<YOUR_EMAIL>)
+Author:: Theofilos Papapanagiotou (theofilos@ieee.org)
