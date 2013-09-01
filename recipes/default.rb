@@ -16,7 +16,7 @@ end
 user "#{node['aem']['user']}" do
   supports :manage_home => true
   comment "Adobe AEM user"
-  gid "node['aem']['group']"
+  gid "#{node['aem']['group']}"
   home "#{node['aem']['install_path']}"
   shell "/bin/bash"
 end
