@@ -42,7 +42,8 @@ if !File.exists?("/opt/aem/AEM_5_6_Quickstart.jar")
   message ""
 # generate the hash by using your Adobe account:
 # echo username:password | base64
-  headers "Authorization" => "Basic xxxxxxx="
+  auth="#{node['aem']['adobe_id']}:#{node['aem']['adobe_password']}"
+  headers "Authorization" => "Basic #{Base64.encode64(auth)}"
   action :head
   notifies :create, "remote_file[/opt/aem/AEM_5_6_Quickstart.jar]", :immediately
  end
