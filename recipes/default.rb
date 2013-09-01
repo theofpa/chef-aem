@@ -49,7 +49,22 @@ if !File.exists?("/opt/aem/AEM_5_6_Quickstart.jar")
  end
 end
 
+file "/opt/aem/license.properties" do
+  owner "aem"
+  group "aem"
+  mode 00644
+  content "#Adobe Granite License Properties
+#Tue Feb 28 10:45:30 EST 2012
+license.product.name=Adobe CQ5
+license.customer.name=#{node['aem']['license.customer.name']}
+license.product.version=5.5.0
+license.downloadID=#node['aem']['license.downloadID']{}"
+  action :create_if_missing
+end
+
 bash 'run_jar' do
+  user 'aem'
+  group 'aem'
   if !File.exists?("/opt/aem/crx-quickstart/repository/.lock")
     code <<-EOH
     cd /opt/aem
