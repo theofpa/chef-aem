@@ -31,8 +31,8 @@ end
 # remote_file does not support headers for authentication in this version of Chef, it will be fixed in a future version where CHEF-3786 will be released. This is a workaround to use both remote_file and http_request to pass the authentication file.
 remote_file "#{node['aem']['install_path']}/AEM_5_6_Quickstart.jar" do
   source "http://daycare.day.com/home/products/cq_wcm/Adobe_Experience_Manager_5_6.Par.0021.file.tmp/AEM_5_6_Quickstart.jar"
-  owner '#{node['aem']['user']}'
-  group '#{node['aem']['group']}'
+  owner "#{node['aem']['user']}"
+  group "#{node['aem']['group']}"
   action :nothing
 end
 
