@@ -68,7 +68,7 @@ bash 'run_jar' do
   group 'aem'
   if !File.exists?("#{node['aem']['install_path']}/crx-quickstart/repository/.lock")
     code <<-EOH
-    cd "#{default['aem']['install_path']}"
+    cd "#{node['aem']['install_path']}"
     java -jar AEM_5_6_Quickstart.jar &
     EOH
   end
