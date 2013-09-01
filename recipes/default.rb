@@ -9,34 +9,34 @@
 include_recipe "apt"
 include_recipe "java"
 
-group "#{default['aem']['group']}" do
+group "#{node['aem']['group']}" do
   append true
 end
 
-user "#{default['aem']['user']}" do
+user "#{node['aem']['user']}" do
   supports :manage_home => true
   comment "Adobe AEM user"
-  gid "default['aem']['group']"
-  home "#{default['aem']['install_path']}"
+  gid "node['aem']['group']"
+  home "#{node['aem']['install_path']}"
   shell "/bin/bash"
 end
 
-directory "#{default['aem']['install_path']}" do
-  owner "#{default['aem']['user']}"
-  group "#{default['aem']['group']}"
+directory "#{node['aem']['install_path']}" do
+  owner "#{node['aem']['user']}"
+  group "#{node['aem']['group']}"
   mode 00755
   action :create
 end
 
 # remote_file does not support headers for authentication in this version of Chef, it will be fixed in a future version where CHEF-3786 will be released. This is a workaround to use both remote_file and http_request to pass the authentication file.
-remote_file "#{default['aem']['install_path']}/AEM_5_6_Quickstart.jar" do
+remote_file "#{node['aem']['install_path']}/AEM_5_6_Quickstart.jar" do
   source "http://daycare.day.com/home/products/cq_wcm/Adobe_Experience_Manager_5_6.Par.0021.file.tmp/AEM_5_6_Quickstart.jar"
-  owner '#{default['aem']['user']}'
-  group '#{default['aem']['group']}'
+  owner '#{node['aem']['user']}'
+  group '#{node['aem']['group']}'
   action :nothing
 end
 
-if !File.exists?("#{default['aem']['install_path']}/AEM_5_6_Quickstart.jar")
+if !File.exists?("#{node['aem']['install_path']}/AEM_5_6_Quickstart.jar")
  http_request "Download AEM_5_6_Quickstart.jar" do
   url "http://daycare.day.com/home/products/cq_wcm/Adobe_Experience_Manager_5_6.Par.0021.file.tmp/AEM_5_6_Quickstart.jar"
   message ""
@@ -45,13 +45,13 @@ if !File.exists?("#{default['aem']['install_path']}/AEM_5_6_Quickstart.jar")
   auth="#{node['aem']['adobe_id']}:#{node['aem']['adobe_password']}"
   headers "Authorization" => "Basic #{Base64.encode64(auth)}"
   action :head
-  notifies :create, "remote_file[#{default['aem']['install_path']}/AEM_5_6_Quickstart.jar]", :immediately
+  notifies :create, "remote_file[#{node['aem']['install_path']}/AEM_5_6_Quickstart.jar]", :immediately
  end
 end
 
-file "#{default['aem']['install_path']}/license.properties" do
-  owner "#{default['aem']['user']}"
-  group "#{default['aem']['group']}"
+file "#{node['aem']['install_path']}/license.properties" do
+  owner "#{node['aem']['user']}"
+  group "#{node['aem']['group']}"
   mode 00644
   content "#Adobe Granite License Properties
 #Tue Feb 28 10:45:30 EST 2012
@@ -66,7 +66,7 @@ end
 bash 'run_jar' do
   user 'aem'
   group 'aem'
-  if !File.exists?("#{default['aem']['install_path']}/crx-quickstart/repository/.lock")
+  if !File.exists?("#{node['aem']['install_path']}/crx-quickstart/repository/.lock")
     code <<-EOH
     java -jar AEM_5_6_Quickstart.jar &
     EOH
