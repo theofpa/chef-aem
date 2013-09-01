@@ -1,4 +1,7 @@
 default['java']['jdk_version']='7'
+default['aem']['install_path']='/opt/aem'
+default['aem']['user']='aem'
+default['aem']['group']='aem'
 default['aem']['adobe_id']='user@email.com'
 default['aem']['adobe_password']='yourpassword'
 default['aem']['license.customer.name']='Company Name'

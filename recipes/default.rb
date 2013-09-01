@@ -9,34 +9,34 @@
 include_recipe "apt"
 include_recipe "java"
 
-group "aem" do
+group "#{default['aem']['group']}" do
   append true
 end
 
-user "aem" do
+user "#{default['aem']['user']}" do
   supports :manage_home => true
   comment "Adobe AEM user"
-  gid "aem"
-  home "/opt/aem"
+  gid "default['aem']['group']"
+  home "#{default['aem']['install_path']}"
   shell "/bin/bash"
 end
 
-directory "/opt/aem" do
-  owner "aem"
-  group "aem"
+directory "#{default['aem']['install_path']}" do
+  owner "#{default['aem']['user']}"
+  group "#{default['aem']['group']}"
   mode 00755
   action :create
 end
 
 # remote_file does not support headers for authentication in this version of Chef, it will be fixed in a future version where CHEF-3786 will be released. This is a workaround to use both remote_file and http_request to pass the authentication file.
-remote_file "/opt/aem/AEM_5_6_Quickstart.jar" do
+remote_file "#{default['aem']['install_path']}/AEM_5_6_Quickstart.jar" do
   source "http://daycare.day.com/home/products/cq_wcm/Adobe_Experience_Manager_5_6.Par.0021.file.tmp/AEM_5_6_Quickstart.jar"
-  owner 'aem'
-  group 'aem'
+  owner '#{default['aem']['user']}'
+  group '#{default['aem']['group']}'
   action :nothing
 end
 
-if !File.exists?("/opt/aem/AEM_5_6_Quickstart.jar")
+if !File.exists?("#{default['aem']['install_path']}/AEM_5_6_Quickstart.jar")
  http_request "Download AEM_5_6_Quickstart.jar" do
   url "http://daycare.day.com/home/products/cq_wcm/Adobe_Experience_Manager_5_6.Par.0021.file.tmp/AEM_5_6_Quickstart.jar"
   message ""
@@ -45,29 +45,29 @@ if !File.exists?("/opt/aem/AEM_5_6_Quickstart.jar")
   auth="#{node['aem']['adobe_id']}:#{node['aem']['adobe_password']}"
   headers "Authorization" => "Basic #{Base64.encode64(auth)}"
   action :head
-  notifies :create, "remote_file[/opt/aem/AEM_5_6_Quickstart.jar]", :immediately
+  notifies :create, "remote_file[#{default['aem']['install_path']}/AEM_5_6_Quickstart.jar]", :immediately
  end
 end
 
-file "/opt/aem/license.properties" do
-  owner "aem"
-  group "aem"
+file "#{default['aem']['install_path']}/license.properties" do
+  owner "#{default['aem']['user']}"
+  group "#{default['aem']['group']}"
   mode 00644
   content "#Adobe Granite License Properties
 #Tue Feb 28 10:45:30 EST 2012
 license.product.name=Adobe CQ5
 license.customer.name=#{node['aem']['license.customer.name']}
 license.product.version=5.5.0
-license.downloadID=#node['aem']['license.downloadID']{}"
+license.downloadID=#{node['aem']['license.downloadID']}
+"
   action :create_if_missing
 end
 
 bash 'run_jar' do
   user 'aem'
   group 'aem'
-  if !File.exists?("/opt/aem/crx-quickstart/repository/.lock")
+  if !File.exists?("#{default['aem']['install_path']}/crx-quickstart/repository/.lock")
     code <<-EOH
-    cd /opt/aem
     java -jar AEM_5_6_Quickstart.jar &
     EOH
   end
