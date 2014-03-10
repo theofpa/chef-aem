@@ -1,8 +1,11 @@
 language: ruby
-gemfile:
-   - test/support/Gemfile
+bundler_args: --without development
+script: "bundle exec rake build"
 rvm:
-  - 1.9.2
   - 1.9.3
-script:
-  - bundle exec rake knife
+gemfile:
+  - Gemfile
+branches:
+  only:
+    - master
+    - develop
