@@ -4,7 +4,7 @@ desc "Runs knife cookbook test"
 task :knife do
   Rake::Task[:prepare_sandbox].execute
 
-  sh "bundle exec knife cookbook test cookbook -c test/.chef/knife.rb  -o #{sandbox_path}/../"
+  sh "knife cookbook test chef-aem"
 end
 
 task :prepare_sandbox do
