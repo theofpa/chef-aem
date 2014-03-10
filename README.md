@@ -1,4 +1,5 @@
 # chef-aem cookbook
+[![Build Status](https://travis-ci.org/theofpa/chef-aem.png?branch=master)](https://travis-ci.org/theofpa/chef-aem)
 
 A cookbook to install Adobe Experience Manager 5.6.
 
