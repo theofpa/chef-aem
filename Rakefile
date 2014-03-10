@@ -1,10 +1,23 @@
 #!/usr/bin/env rake
 
+task :default => 'foodcritic'
+
+desc "Runs foodcritic linter"
+task :foodcritic do
+  Rake::Task[:prepare_sandbox].execute
+
+  if Gem::Version.new("1.9.2") <= Gem::Version.new(RUBY_VERSION.dup)
+    sh "foodcritic -f any #{sandbox_path}"
+  else
+    puts "WARN: foodcritic run is skipped as Ruby #{RUBY_VERSION} is < 1.9.2."
+  end
+end
+
 desc "Runs knife cookbook test"
 task :knife do
   Rake::Task[:prepare_sandbox].execute
 
-  sh "bundle exec knife cookbook test cookbook -c test/.chef/knife.rb  -o #{sandbox_path}/../"
+  sh "bundle exec knife cookbook test cookbook -c test/.chef/knife.rb -o #{sandbox_path}/../"
 end
 
 task :prepare_sandbox do
